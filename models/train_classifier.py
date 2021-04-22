@@ -1,8 +1,5 @@
 import sys
 import pandas as pd
-import numpy as np
-import sqlite3
-import sqlalchemy
 from sqlalchemy import create_engine
 
 import re
@@ -15,23 +12,33 @@ nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
-from sklearn.datasets import make_multilabel_classification
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.feature_extraction import DictVectorizer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import classification_report, roc_auc_score, roc_curve, confusion_matrix, f1_score
+from sklearn.metrics import classification_report
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.model_selection import GridSearchCV
 import pickle
-from pathlib import Path
-from joblib import dump, load
+
 
 
 def load_data(Disaster_Responses):
+    """
+    Function loads the clean data from the database.
+    In this function the target and explanatory variables are defined
+
+    Parameters
+    ----------
+    Disaster_Responses: database name
+
+    Returns
+    -------
+    X: pd.DataFrame - explanatory variables
+    Y: pd.DataFrame - Target variables
+    category_names: str - Labels of the target variables
+    """
     engine = create_engine('sqlite:///data/Disaster_Responses.db')
     df = pd.read_sql("SELECT * FROM Disaster_Responses", con=engine)
     X = df.message.values
@@ -40,8 +47,21 @@ def load_data(Disaster_Responses):
     return X, Y, category_names
 
 
-def tokenize(text):
+def tokenize(text) -> str :
+    """
+    Function preprocesses the text data.
+
+    Parameters
+    ----------
+    text: str
+
+    Returns
+    -------
+    str: clean text data
+    """
+    # Split text into words
     tokens = word_tokenize(text)
+    # Identify the different parts of speech
     lemmatizer = WordNetLemmatizer()
 
     clean_tokens = []
@@ -53,6 +73,12 @@ def tokenize(text):
 
 
 def build_model():
+    """
+    Function build the model's pipeline
+    Returns
+    -------
+    model wrap
+    """
     pipeline = Pipeline([('vect', CountVectorizer(tokenizer=tokenize)),
                          ('tfidf', TfidfTransformer()),
                          ('clf', MultiOutputClassifier(RandomForestClassifier()))])
@@ -66,31 +92,56 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    # train test split
-    # X,y,category_names = load_data(Disaster_Responses)
-    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    """
+    Functions makes predictons using the saved model and evaluates its performance.
 
-    # fit model
-    # model = pipeline.fit(X_train, y_train)
+    Parameters
+    ----------
+    model: transformers, gridsearch and classifier
+    X_test: pd.DataFrame - Explanatory variables
+    Y_test: pd.DataFrame - Target variables
+    category_names
 
-    # output model test results
+    Returns
+    -------
+    model
+    """
+    # Predict the target variables
     Y_pred = model.predict(X_test)
 
     n = Y_pred.shape[1]
-
+    # Create the classification report (precision, recall, accuracy and f1-score)
     for i in range(n):
         class_report = classification_report(Y_test[:, i], Y_pred[:, i]), ('for label:' + category_names[i].upper())
 
     print("classification_report:\n", class_report)
 
-    return model
+    return model,class_report
 
 
 def save_model(model, classifier):
+    """
+    Function saves the trained model.
+
+    Parameters
+    ----------
+    model: trained model
+    classifier: model name
+
+    Returns
+    -------
+
+    """
     pickle.dump(model, open(classifier, 'wb'))
 
 
 def main():
+    """
+
+    Returns
+    -------
+
+    """
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format('data/Disaster_Responses.db'))

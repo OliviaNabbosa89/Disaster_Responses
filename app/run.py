@@ -18,7 +18,20 @@ app = Flask(__name__)
 
 
 def tokenize(text):
+    """
+    Function preprocesses the text data
+
+    Parameters
+    ----------
+    text: str
+
+    Returns
+    -------
+    clean_tokens: str - clean text file
+    """
+    # Split text into words
     tokens = word_tokenize(text)
+    # Convert words into dictionary
     lemmatizer = WordNetLemmatizer()
 
     clean_tokens = []
@@ -47,17 +60,18 @@ def index():
     genre_names = list(genre_counts.index)
 
     def cat_counts(df, col):
-        '''
-        Function performs counts and calculates percentage shares of categorical columns
+        """
+        Function performs value counts on categorical data
 
-        INPUT
-        df - Dataframe [obj]
-        col - categorical column[bool,str]
+        Parameters
+        ----------
+        df: pd.DataFrame
+        col: str - categorical data
 
-        OUTPUT
-        dff - Dataframe consisting of 2 columns (COUNTS & PERCENTAGES)
-
-        '''
+        Returns
+        -------
+        dff: pd.DataFrame - counts and percentage shares.
+        """
         df[col].value_counts()
         df_dict = df[col].value_counts().to_dict()
         df_list = []
@@ -74,6 +88,16 @@ def index():
     values = genre_count['Count']
 
     def column_list_dict(x):
+        """
+        Function loops through the dummy variables and counts its frequency.
+        Parameters
+        ----------
+        x: pd.DataFrame - dummy variables
+
+        Returns
+        -------
+        pd.DataFrame
+        """
         column_list_df = []
         for col_name in x.columns:
             count = df[df[col_name] == 1][col_name].value_counts().astype('str').str.extract(
@@ -82,6 +106,7 @@ def index():
             column_list_df.append(y)
         return pd.DataFrame(column_list_df, columns=['class', 'count'])
 
+    # Work through the dataframe to simplify the plot
     categories = df.drop(['original', 'id', 'message', 'genre', 'related'], axis=1)
     counts = column_list_dict(categories)
     counts['total_count'] = counts['count'].astype(str).str[-7:]
@@ -90,11 +115,11 @@ def index():
     counts['counts'] = counts['total_count'].astype(float)
     counts = counts.drop('total_count', axis=1).sort_values('counts')
 
+    # Input to plot 2 - counts of the target responses.
     target_classes = counts['class']
     target_class_counts = counts['counts']
 
-    # Plot Top 7 classes grouped by genre
-
+    # Plot Top 7 classes grouped by genre (weather,food,water,aid_related,medical_help,death and shelter)
     weather_class = df[df['weather_related'] == 1]['genre'].value_counts()
     food_class = df[df['food'] == 1]['genre'].value_counts()
     water_class = df[df['water'] == 1]['genre'].value_counts()
@@ -223,6 +248,12 @@ def index():
 # web page that handles user query and displays model results
 @app.route('/go')
 def go():
+    """
+
+    Returns
+    -------
+
+    """
     # save user input in query
     query = request.args.get('query', '')
 

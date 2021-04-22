@@ -5,6 +5,19 @@ from sqlalchemy import create_engine
 
 
 def load_data(disaster_messages, disaster_categories):
+    """
+    Function loads the raw data
+
+    Parameters
+    ----------
+    disaster_messages: csv file contains messages
+    disaster_categories: csv file contains categories
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame containing merged messages and disaster data
+    """
     # load messages datasets
     messages = pd.read_csv('data/disaster_messages.csv')
     categories = pd.read_csv('data/disaster_categories.csv')
@@ -14,7 +27,19 @@ def load_data(disaster_messages, disaster_categories):
     return df
 
 
-def clean_data(df):
+def clean_data(df) -> pd.DataFrame:
+    """
+    Function cleans and preprocesses the data
+
+    Parameters
+    ----------
+    df: pd.DataFrame
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame in which dummy variables have been created and duplicate values removed.
+    """
     # create a dataframe of the 36 individual category columns
     categories = df['categories'].str.split(';', expand=True)
 
@@ -43,11 +68,28 @@ def clean_data(df):
 
 
 def save_data(df, Disaster_Responses):
+    """
+    Function creates the database connection and the clean data is saved in the data database
+    Parameters
+    ----------
+    df: Pd.DataFrame
+    Disaster_Responses: DataBase name
+
+    Returns
+    -------
+
+    """
     engine = create_engine('sqlite:///data/Disaster_Responses.db')
     df.to_sql('Disaster_Responses', engine, index=False)
 
 
 def main():
+    """
+    Fuction that wraps up the data processing
+    Returns
+    -------
+
+    """
     if len(sys.argv) == 4:
 
         disaster_messages, disaster_categories, engine = sys.argv[1:]
