@@ -19,8 +19,8 @@ def load_data(disaster_messages, disaster_categories):
         DataFrame containing merged messages and disaster data
     """
     # load messages datasets
-    messages = pd.read_csv('data/disaster_messages.csv')
-    categories = pd.read_csv('data/disaster_categories.csv')
+    messages = pd.read_csv(disaster_messages)
+    categories = pd.read_csv(disaster_categories)
 
     # merge the messages and categories dataframe
     df = messages.merge(categories, how='left', on='id')
@@ -62,8 +62,8 @@ def clean_data(df) -> pd.DataFrame:
     # Replace categories column in df with new category columns
     df = pd.concat([df, categories], axis=1)
 
-    #  Remove all rows where related = 0
-    df = df.drop(df[df['related'] == 0].index)
+    #  Remove all rows where related = 2
+    df = df.drop(df[df['related'] == 2].index)
 
     # Remove duplicates
     df = df.drop_duplicates()
@@ -83,7 +83,7 @@ def save_data(df, DisasterResponse):
     -------
 
     """
-    engine = create_engine('sqlite:///data/DisasterResponse.db')
+    engine = create_engine(DisasterResponse)
     df.to_sql('DisasterResponse', engine, index=False)
 
 

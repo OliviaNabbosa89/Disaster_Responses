@@ -1,5 +1,8 @@
 # Disaster_Responses
-This respository carries the code for an application that classifies disasters based on the messages.
+This respository stores the code for an application that classifies disasters based on the messages.
+When disasters strike, the disaster response organisations receive millions of alerts/messages at a time when their resources are constrained.
+The disaster teams would like to attend to the most crusial crises first. This application helps the disaster
+response teams to find the most crusial disasters while also helping those in need to get quick relief or help.
 ## **Table of contents**
 1. [Installations](#installation)
 2. [Project motivation](#motivation)
@@ -31,9 +34,22 @@ This application is built on mainly 2 libraries i.e. NLTK which supports Natural
 supports machine learning.
 
 The repository contains 3 main directories:
-1. app [click here](https://github.com/OliviaNabbosa89/Disaster_Responses/tree/main/app): This contains the main script that runs the application and html templates that have been used to develop the web page.
-2. data [click here](https://github.com/OliviaNabbosa89/Disaster_Responses/tree/main/data): This contains the messages and disaster data that has been used to train the model and hosts the database (Disaster_Responses.db)
-3. models [click here](https://github.com/OliviaNabbosa89/Disaster_Responses/tree/main/models): This contains the pipeline for training classification model
+1. app [click here](https://github.com/OliviaNabbosa89/Disaster_Responses/tree/main/app)
+   * template
+     - master.html: main page of web app
+     - go.html: classification result page of web app
+    * run.py: Flask file that runs app.
+2. data [click here](https://github.com/OliviaNabbosa89/Disaster_Responses/tree/main/data)
+   * disaster_categories.csv: data to process
+   * disaster_messages.csv: data to process
+   * process_data.py: script that process the data.
+   * DisasterResponse.db: database to save clean data. 
+3. models [click here](https://github.com/OliviaNabbosa89/Disaster_Responses/tree/main/models)
+   * train_classier.py: script for training and evaluating the model
+   * classifier.pkl: saved model.
+    
+4. README.md
+5. Requirements.txt
 
 ## Instructions <a name="user-guide"></a>
 The following steps will guide you on how to run scripts:

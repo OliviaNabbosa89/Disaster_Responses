@@ -20,12 +20,16 @@ from sklearn.metrics import f1_score
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import classification_report
 from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
 import pickle
 
 import warnings
+
 warnings.filterwarnings('ignore')
+
+engine = create_engine('sqlite:///data/DisasterResponse.db')
 
 
 def load_data(DisasterResponse):
@@ -43,21 +47,20 @@ def load_data(DisasterResponse):
     Y: pd.DataFrame - Target variables
     category_names: str - Labels of the target variables
     """
-    #Load data from the database
-    engine = create_engine('sqlite:///data/DisasterResponse.db')
-    df = pd.read_sql("SELECT * FROM DisasterResponse", con=engine)
+    # Load data from the database
+    df = pd.read_sql("SELECT * FROM DisasterResponse", engine)
 
     # Remove child_alone response as it has not messages related to it.
     df = df.drop('child_alone', axis=1)
 
     # Define the X and Y variables
     X = df.message.values
-    Y = df.drop(['original', 'id', 'message', 'genre','related','related'], axis=1).values
-    category_names = [col for col in df.columns if col not in ['original', 'id', 'message', 'genre','related']]
+    Y = df.drop(['original', 'id', 'message', 'genre', 'related'], axis=1).values
+    category_names = [col for col in df.columns if col not in ['original', 'id', 'message', 'genre', 'related']]
     return X, Y, category_names
 
 
-def tokenize(text) -> str :
+def tokenize(text) -> str:
     """
     Function preprocesses the text data.
 
@@ -71,6 +74,11 @@ def tokenize(text) -> str :
     """
     # Split text into words
     tokens = word_tokenize(text)
+
+    # Remove stop words
+    stop_words = set(stopwords.words('english'))
+    tokens = [w for w in tokens if not w in stop_words]
+
     # Identify the different parts of speech
     lemmatizer = WordNetLemmatizer()
 
@@ -121,28 +129,14 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
     n = Y_pred.shape[1]
 
-    # Create the Precision scores
-    Pre_Score = []
-    for i in range(n):
-        Prec_Score = precision_score(Y_test[:, i], Y_pred[:, i], average='weighted'), (category_names[i].upper())
-        Pre_Score.append(Prec_Score )
+    # Create classification_report
+    for i, category_name in enumerate(category_names):
+        y_truth = Y_test[:, i]
+        y_preds = Y_pred[:, i]
+        class_report = classification_report(y_truth, y_preds)
 
-    # Create the f1 score
-    FF_Score = []
-    for i in range(n):
-        F_Score = f1_score(Y_test[:, i], Y_pred[:, i], average='weighted'), (category_names[i].upper())
-        FF_Score.append(F_Score )
-
-    # Create the Recall score
-    Rec_Score = []
-    for i in range(n):
-        R_Score = recall_score(Y_test[:, i], Y_pred[:, i], average='weighted'), (category_names[i].upper())
-        Rec_Score.append(R_Score)
-
-    print("precision_score:", Pre_Score)
-    print("f1_score:\n", FF_Score)
-    print("Recall_score:\n", FF_Score)
-
+    print(category_names[i])
+    print(class_report)
     return model
 
 

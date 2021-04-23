@@ -12,6 +12,7 @@ from plotly.graph_objs import Bar
 from plotly.graph_objs import Pie
 from plotly.graph_objs import Heatmap
 from sklearn.externals import joblib
+from scikit.external import joblib
 from sqlalchemy import create_engine
 
 app = Flask(__name__)
