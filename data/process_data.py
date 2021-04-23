@@ -71,7 +71,7 @@ def clean_data(df) -> pd.DataFrame:
     return df
 
 
-def save_data(df, Disaster_Responses):
+def save_data(df, DisasterResponse):
     """
     Function creates the database connection and the clean data is saved in the data database
     Parameters
@@ -83,8 +83,8 @@ def save_data(df, Disaster_Responses):
     -------
 
     """
-    engine = create_engine('sqlite:///data/Disaster_Responses.db')
-    df.to_sql('Disaster_Responses', engine, index=False)
+    engine = create_engine('sqlite:///data/DisasterResponse.db')
+    df.to_sql('DisasterResponse', engine, index=False)
 
 
 def main():
@@ -105,8 +105,8 @@ def main():
         print('Cleaning data...')
         df = clean_data(df)
 
-        print('Saving data...\n    DATABASE: {}'.format('sqlite:///data/Disaster_Responses.db'))
-        save_data(df, 'sqlite:///data/Disaster_Responses.db')
+        print('Saving data...\n    DATABASE: {}'.format('sqlite:///data/DisasterResponse.db'))
+        save_data(df, 'sqlite:///data/DisasterResponse.db')
 
         print('Cleaned data saved to database!')
 

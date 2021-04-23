@@ -39,8 +39,8 @@ The repository contains 3 main directories:
 The following steps will guide you on how to run scripts:
 
 1. Run the following commands in the project's root directory to set up your database and model.
-* 'python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/Disaster_Responses.db'
-* python models/train_classifier.py data/Disaster_Responses.db models/classifier.pkl
+* 'python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db'
+* python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl
 2. Run the following command in the app's directory to run your web app.
 * python run.py
 

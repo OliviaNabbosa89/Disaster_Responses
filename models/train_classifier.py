@@ -16,16 +16,19 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
 import pickle
 
+import warnings
+warnings.filterwarnings('ignore')
 
 
-def load_data(Disaster_Responses):
+def load_data(DisasterResponse):
     """
     Function loads the clean data from the database.
     In this function the target and explanatory variables are defined
@@ -41,8 +44,8 @@ def load_data(Disaster_Responses):
     category_names: str - Labels of the target variables
     """
     #Load data from the database
-    engine = create_engine('sqlite:///data/Disaster_Responses.db')
-    df = pd.read_sql("SELECT * FROM Disaster_Responses", con=engine)
+    engine = create_engine('sqlite:///data/DisasterResponse.db')
+    df = pd.read_sql("SELECT * FROM DisasterResponse", con=engine)
 
     # Remove child_alone response as it has not messages related to it.
     df = df.drop('child_alone', axis=1)
@@ -118,16 +121,27 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
     n = Y_pred.shape[1]
 
-    # Create the classification report (precision, recall, accuracy and f1-score)
+    # Create the Precision scores
+    Pre_Score = []
     for i in range(n):
-        class_report = classification_report(Y_test[:, i], Y_pred[:, i]), ('for label:' + category_names[i].upper())
+        Prec_Score = precision_score(Y_test[:, i], Y_pred[:, i], average='weighted'), (category_names[i].upper())
+        Pre_Score.append(Prec_Score )
 
     # Create the f1 score
+    FF_Score = []
     for i in range(n):
-        FF_Score = f1_score(Y_test[:, i], Y_pred[:, i], average='weighted'), (category_names[i].upper())
+        F_Score = f1_score(Y_test[:, i], Y_pred[:, i], average='weighted'), (category_names[i].upper())
+        FF_Score.append(F_Score )
 
-    print("classification_report:\n", class_report)
+    # Create the Recall score
+    Rec_Score = []
+    for i in range(n):
+        R_Score = recall_score(Y_test[:, i], Y_pred[:, i], average='weighted'), (category_names[i].upper())
+        Rec_Score.append(R_Score)
+
+    print("precision_score:", Pre_Score)
     print("f1_score:\n", FF_Score)
+    print("Recall_score:\n", FF_Score)
 
     return model
 
@@ -157,8 +171,8 @@ def main():
     """
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
-        print('Loading data...\n    DATABASE: {}'.format('data/Disaster_Responses.db'))
-        X, Y, category_names = load_data('data/Disaster_Responses.db')
+        print('Loading data...\n    DATABASE: {}'.format('data/DisasterResponse.db'))
+        X, Y, category_names = load_data('data/DisasterResponse.db')
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
 
         print('Building model...')

@@ -43,8 +43,8 @@ def tokenize(text):
 
 
 # load data
-engine = create_engine('sqlite:///../data/Disaster_Responses.db')
-df = pd.read_sql_table('Disaster_Responses', engine)
+engine = create_engine('sqlite:///../data/DisasterResponse.db')
+df = pd.read_sql_table('DisasterResponse', engine)
 
 # load model
 model = joblib.load("../models/classifier.pkl")
@@ -270,7 +270,7 @@ def go():
 
 
 def main():
-    app.run(host='127.0.0.1', port=3001, debug=True)
+    app.run(host='0.0.0.0', port=3001, debug=True)
 
 
 if __name__ == '__main__':
