@@ -51,7 +51,7 @@ The repository contains 3 main directories:
     
 4. README.md
 5. Requirements.txt
-6. 
+
 ## Instructions <a name="user-guide"></a>
 The following steps will guide you on how to run scripts:
 
