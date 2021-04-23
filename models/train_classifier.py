@@ -17,6 +17,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
+from sklearn.metrics import f1_score
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.model_selection import GridSearchCV
@@ -39,11 +40,17 @@ def load_data(Disaster_Responses):
     Y: pd.DataFrame - Target variables
     category_names: str - Labels of the target variables
     """
+    #Load data from the database
     engine = create_engine('sqlite:///data/Disaster_Responses.db')
     df = pd.read_sql("SELECT * FROM Disaster_Responses", con=engine)
+
+    # Remove child_alone response as it has not messages related to it.
+    df = df.drop('child_alone', axis=1)
+
+    # Define the X and Y variables
     X = df.message.values
-    Y = df.drop(['original', 'id', 'message', 'genre'], axis=1).values
-    category_names = [col for col in df.columns if col not in ['original', 'id', 'message', 'genre']]
+    Y = df.drop(['original', 'id', 'message', 'genre','related','related'], axis=1).values
+    category_names = [col for col in df.columns if col not in ['original', 'id', 'message', 'genre','related']]
     return X, Y, category_names
 
 
@@ -110,13 +117,19 @@ def evaluate_model(model, X_test, Y_test, category_names):
     Y_pred = model.predict(X_test)
 
     n = Y_pred.shape[1]
+
     # Create the classification report (precision, recall, accuracy and f1-score)
     for i in range(n):
         class_report = classification_report(Y_test[:, i], Y_pred[:, i]), ('for label:' + category_names[i].upper())
 
-    print("classification_report:\n", class_report)
+    # Create the f1 score
+    for i in range(n):
+        FF_Score = f1_score(Y_test[:, i], Y_pred[:, i], average='weighted'), (category_names[i].upper())
 
-    return model,class_report
+    print("classification_report:\n", class_report)
+    print("f1_score:\n", FF_Score)
+
+    return model
 
 
 def save_model(model, classifier):

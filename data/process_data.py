@@ -55,11 +55,15 @@ def clean_data(df) -> pd.DataFrame:
         # convert column from string to numeric
         categories[column] = categories[column].astype(float)
 
+
     # Drop the duplicates
     df = df.drop('categories', axis=1)
 
     # Replace categories column in df with new category columns
     df = pd.concat([df, categories], axis=1)
+
+    #  Remove all rows where related = 0
+    df = df.drop(df[df['related'] == 0].index)
 
     # Remove duplicates
     df = df.drop_duplicates()
