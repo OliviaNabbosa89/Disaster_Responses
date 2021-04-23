@@ -51,7 +51,7 @@ The repository contains 3 main directories:
     
 4. README.md
 5. Requirements.txt
-=======
+
 1. app [click here](https://github.com/OliviaNabbosa89/Disaster_Responses/tree/main/app): This contains the main script that runs the application and html templates that have been used to develop the web page.
 2. data [click here](https://github.com/OliviaNabbosa89/Disaster_Responses/tree/main/data): This contains the messages and disaster data that has been used to train the model and hosts the database (DisasterResponse.db)
 3. models [click here](https://github.com/OliviaNabbosa89/Disaster_Responses/tree/main/models): This contains the pipeline for training classification model.
