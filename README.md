@@ -71,6 +71,13 @@ The main results of this project can viewed in  a web browser. Follow the steps 
 3. Pass the SPACEDOMAIN and SPACEID in the link http://SPACEID-3001.SPACEDOMAIN
 4. Open the link http://SPACEID-3001.SPACEDOMAIN in the browser.
 
+
+![image](https://user-images.githubusercontent.com/80167199/115960260-a585c800-a510-11eb-9f5e-640e676ec620.png)
+
+![image](https://user-images.githubusercontent.com/80167199/115960282-c3532d00-a510-11eb-8f9a-41563116598e.png)
+
+
+
 ## Licensing, Authors, Acknowledgements<a name="licensing"></a>
 I must give credit to Figure Eight Inc for providing the data that has been used in this project. [here](https://www.figure-eight.com)
 Special thanks to Udacity that has provided the resource material and training throughout the project [here](https://www.udacity.com/)
