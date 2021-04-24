@@ -24,6 +24,7 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
 import pickle
+import joblib
 
 import warnings
 
@@ -50,13 +51,10 @@ def load_data(DisasterResponse):
     # Load data from the database
     df = pd.read_sql("SELECT * FROM DisasterResponse", engine)
 
-    # Remove child_alone response as it has not messages related to it.
-    df = df.drop('child_alone', axis=1)
-
     # Define the X and Y variables
     X = df.message.values
-    Y = df.drop(['original', 'id', 'message', 'genre', 'related'], axis=1).values
-    category_names = [col for col in df.columns if col not in ['original', 'id', 'message', 'genre', 'related']]
+    Y = df.drop(['original', 'id', 'message', 'genre'], axis=1).values
+    category_names = [col for col in df.columns if col not in ['original', 'id', 'message', 'genre']]
     return X, Y, category_names
 
 
@@ -135,8 +133,8 @@ def evaluate_model(model, X_test, Y_test, category_names):
         y_preds = Y_pred[:, i]
         class_report = classification_report(y_truth, y_preds)
 
-    print(category_names[i])
-    print(class_report)
+        print(category_names[i])
+        print(class_report)
     return model
 
 

@@ -84,7 +84,7 @@ def save_data(df, DisasterResponse):
 
     """
     engine = create_engine(DisasterResponse)
-    df.to_sql('DisasterResponse', engine, index=False)
+    df.to_sql('DisasterResponse', engine, index=False, if_exists='replace')
 
 
 def main():
