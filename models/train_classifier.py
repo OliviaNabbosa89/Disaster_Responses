@@ -26,6 +26,7 @@ from sklearn.metrics import recall_score
 import pickle
 import joblib
 
+
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -102,7 +103,7 @@ def build_model():
     parameters = {'clf__estimator__n_estimators': range(5, 20 + 1, 5),
                   'clf__estimator__max_depth': range(2, 4)}
 
-    cv = GridSearchCV(pipeline, param_grid=parameters, verbose=2, n_jobs=2)
+    cv = GridSearchCV(pipeline, param_grid=parameters, verbose=2, n_jobs=1)
 
     return cv
 
