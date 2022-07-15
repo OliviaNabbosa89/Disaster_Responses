@@ -20,7 +20,6 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
-from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
 import pickle
 import joblib
